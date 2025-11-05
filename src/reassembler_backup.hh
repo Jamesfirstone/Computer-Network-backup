@@ -1,19 +1,12 @@
 #pragma once
 
 #include "byte_stream.hh"
-#include <map>
 
 class Reassembler
 {
 public:
   // Construct Reassembler to write into given ByteStream.
-  // 在初始化列表中初始化所有成员变量
-  explicit Reassembler( ByteStream&& output ) 
-    : output_( std::move( output ) )
-    , unassembled_bytes_()
-    , has_last_( false )
-    , last_index_( 0 )
-    {}
+  explicit Reassembler( ByteStream&& output ) : output_( std::move( output ) ) {}
 
   /*
    * Insert a new substring to be reassembled into a ByteStream.
@@ -49,11 +42,4 @@ public:
 
 private:
   ByteStream output_; // the Reassembler writes to this ByteStream
-  std::map<uint64_t, char> unassembled_bytes_; // 存储尚未组装的字节
-  bool has_last_ = false;                      // 是否收到最后一个子字符串
-  uint64_t last_index_ = 0;                    // 最后一个字节的索引
-
-  // 辅助函数：尝试将连续的字节推送到输出流
-  void push_contiguous_bytes();
-  void check_if_finished(); // 新增：专门检查是否应该关闭流
 };
