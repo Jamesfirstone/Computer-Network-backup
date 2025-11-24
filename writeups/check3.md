@@ -1,4 +1,4 @@
-Checkpoint 2 Writeup
+Checkpoint 3 Writeup
 ====================
 
 My name: [your name here]
@@ -9,15 +9,15 @@ I collaborated with: [list sunetids here]
 
 I would like to thank/reward these classmates for their help: [list sunetids here]
 
-This lab took me about [n] hours to do. I [did/did not] attend the lab session.
+This checkpoint took me about [n] hours to do. I [did/did not] attend the lab session.
 
-Describe Wrap32 and TCPReceiver structure and design. [Describe data
+Program Structure and Design of the TCPSender [Describe data
 structures and approach taken. Describe alternative designs considered
 or tested.  Describe benefits and weaknesses of your design compared
 with alternatives -- perhaps in terms of simplicity/complexity, risk
 of bugs, asymptotic performance, empirical performance, required
 implementation time and difficulty, and other factors. Include any
-measurements if applicable.]
+measurements if applicable.]: []
 
 Implementation Challenges:
 []
@@ -32,5 +32,3 @@ Remaining Bugs:
 - Optional: I was surprised by: [describe]
 
 - Optional: I'm not sure about: [describe]
-
-- Optional: I made an extra test I think will be helpful in catching bugs: [describe where to find]
