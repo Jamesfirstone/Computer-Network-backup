@@ -8,8 +8,11 @@ class TCPReceiver
 {
 public:
   // Construct with given Reassembler
-  explicit TCPReceiver( Reassembler&& reassembler ) : reassembler_( std::move( reassembler ) ) {}
-
+  explicit TCPReceiver( Reassembler&& reassembler ) 
+    : reassembler_( std::move( reassembler ) )
+    , isn_( std::nullopt )
+    , syn_received_( false )
+    {}
   /*
    * The TCPReceiver receives TCPSenderMessages, inserting their payload into the Reassembler
    * at the correct stream index.
@@ -27,4 +30,6 @@ public:
 
 private:
   Reassembler reassembler_;
+  std::optional<Wrap32> isn_;      // 初始序列号
+  bool syn_received_ = false;      // 是否收到了SYN
 };
