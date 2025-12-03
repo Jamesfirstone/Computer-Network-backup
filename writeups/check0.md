@@ -3,9 +3,11 @@ Checkpoint 0 Writeup
 
 My name: [your name here]
 
-My StudentID: [your studentId here]
+My SUNet ID: [your sunetid here]
 
-I would like to credit/thank these classmates for their help: [list studentIids here]
+I collaborated with: [list sunetids here]
+
+I would like to credit/thank these classmates for their help: [list sunetids here]
 
 This lab took me about [n] hours to do. I [did/did not] attend the lab session.
 
