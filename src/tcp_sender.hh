@@ -16,7 +16,19 @@ class TCPSender
 public:
   /* Construct TCP sender with given default Retransmission Timeout and possible ISN */
   TCPSender( ByteStream&& input, Wrap32 isn, uint64_t initial_RTO_ms )
-    : input_( std::move( input ) ), isn_( isn ), initial_RTO_ms_( initial_RTO_ms )
+    : input_( std::move( input ) )
+    , isn_( isn )
+    , initial_RTO_ms_( initial_RTO_ms )
+    , next_seqno_( 0 )
+    , ackno_( 0 )
+    , window_size_( 1 )          // 根据FAQ，初始窗口大小为1
+    , current_RTO_ms_( initial_RTO_ms )
+    , timer_elapsed_ms_( 0 )
+    , timer_running_( false )
+    , consecutive_retransmissions_( 0 )
+    , outstanding_segments_()  // 添加这一行
+    , syn_sent_( false )
+    , fin_sent_( false )
   {}
 
   /* Generate an empty TCPSenderMessage */
@@ -48,4 +60,28 @@ private:
   ByteStream input_;
   Wrap32 isn_;
   uint64_t initial_RTO_ms_;
+
+  // 需要添加的成员变量
+  uint64_t next_seqno_;  // 下一个要发送的序列号（绝对）
+  uint64_t ackno_;       // 已确认的序列号（绝对）
+  uint64_t window_size_; // 接收方窗口大小
+
+  // 重传相关
+  uint64_t current_RTO_ms_;              // 当前RTO值
+  uint64_t timer_elapsed_ms_;            // 定时器已运行时间
+  bool timer_running_;                   // 定时器是否在运行
+  uint64_t consecutive_retransmissions_; // 连续重传次数
+
+  // 未完成的报文段
+  struct OutstandingSegment
+  {
+    TCPSenderMessage msg;
+    uint64_t absolute_seqno; // 绝对序列号
+    uint64_t length;         // 报文段长度
+  };
+  std::deque<OutstandingSegment> outstanding_segments_;
+
+  // 状态标志
+  bool syn_sent_; // SYN是否已发送
+  bool fin_sent_; // FIN是否已发送
 };
