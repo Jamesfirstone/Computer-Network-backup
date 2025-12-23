@@ -30,7 +30,6 @@ protected:
   uint64_t bytes_pushed_ = 0;
   uint64_t bytes_popped_ = 0;
   bool closed_ = false;
-
 };
 
 class Writer : public ByteStream
