@@ -9,30 +9,22 @@ show_usage () {
 
 start_tun () {
     local TUNNUM="$1" TUNDEV="tun$1"
-    # 创建tun设备（增加存在性检查，避免“Device or resource busy”）
-    ip tuntap add mode tun user "${SUDO_USER}" name "${TUNDEV}" 2>/dev/null
-    # 配置IP和路由（忽略“File exists”等常见提示）
-    ip addr add "${TUN_IP_PREFIX}.${TUNNUM}.1/24" dev "${TUNDEV}" 2>/dev/null
+    ip tuntap add mode tun user "${SUDO_USER}" name "${TUNDEV}"
+    ip addr add "${TUN_IP_PREFIX}.${TUNNUM}.1/24" dev "${TUNDEV}"
     ip link set dev "${TUNDEV}" up
-    ip route replace "${TUN_IP_PREFIX}.${TUNNUM}.0/24" dev "${TUNDEV}" rto_min 10ms 2>/dev/null
+    ip route change "${TUN_IP_PREFIX}.${TUNNUM}.0/24" dev "${TUNDEV}" rto_min 10ms
 
-    # ==== 替换的关键部分：新的iptables规则 ====
-    # 1. 在mangle表的PREROUTING链，为来自此隧道的数据包打上标记
-    iptables -t mangle -A PREROUTING -s ${TUN_IP_PREFIX}.${TUNNUM}.0/24 -j MARK --set-mark ${TUNNUM}
-    # 2. 在nat表的POSTROUTING链，仅对带有此标记的数据包进行连接追踪和伪装
-    iptables -t nat -A POSTROUTING -m mark --mark ${TUNNUM} -j MASQUERADE
-    # ===========================================
-
+    # Apply NAT (masquerading) only to traffic from CS144's network devices
+    iptables -t nat -A PREROUTING -s ${TUN_IP_PREFIX}.${TUNNUM}.0/24 -j CONNMARK --set-mark ${TUNNUM}
+    iptables -t nat -A POSTROUTING -j MASQUERADE -m connmark --mark ${TUNNUM}
     echo 1 > /proc/sys/net/ipv4/ip_forward
 }
 
 stop_tun () {
     local TUNDEV="tun$1"
-    # 删除新增的iptables规则（必须与添加时完全一致）
-    iptables -t mangle -D PREROUTING -s ${TUN_IP_PREFIX}.${1}.0/24 -j MARK --set-mark ${1}
-    iptables -t nat -D POSTROUTING -m mark --mark ${1} -j MASQUERADE
-    # 删除tun设备
-    ip tuntap del mode tun name "$TUNDEV" 2>/dev/null
+    iptables -t nat -D PREROUTING -s ${TUN_IP_PREFIX}.${1}.0/24 -j CONNMARK --set-mark ${1}
+    iptables -t nat -D POSTROUTING -j MASQUERADE -m connmark --mark ${1}
+    ip tuntap del mode tun name "$TUNDEV"
 }
 
 start_all () {
