@@ -1,0 +1,37 @@
+============================================================
+PING DATA ANALYSIS REPORT
+============================================================
+
+1. BASIC STATISTICS
+   Total packets sent: 40709
+   Total packets received: 35996
+   Overall delivery rate: 0.8842 (88.42%)
+   Packets lost: 4713
+
+2. STREAK STATISTICS
+   Longest consecutive success streak: 126 packets
+   Longest consecutive loss streak: 7 packets
+
+3. CONDITIONAL DELIVERY RATES
+   Probability of success given previous success: 0.8886
+   Probability of success given previous loss: 0.8508
+
+4. LOSS PATTERN ANALYSIS
+   Conclusion: Loss shows bursty pattern
+   - Success is more likely to be followed by success
+   - Loss is more likely to be followed by loss
+
+5. RTT STATISTICS
+   Minimum RTT: 0.00 ms
+   Maximum RTT: 1427.00 ms
+   Mean RTT: 406.28 ms
+   Median RTT: 389.00 ms
+   RTT Standard Deviation: 69.91 ms
+   95th percentile RTT: 442.00 ms
+   99th percentile RTT: 837.05 ms
+
+6. EXPERIMENT TIME INFORMATION
+   Start time: 2025-12-27 10:01:46
+   End time: 2025-12-27 12:18:32
+   Duration: 2:16:45.934106
+   Average send interval: 0.20 seconds/packet
